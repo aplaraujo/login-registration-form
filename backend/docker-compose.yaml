@@ -1,0 +1,31 @@
+services:
+  postgres:
+    container_name: postgres-sql
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: 123456
+      PGDATA: /var/lib/postgressql/data
+      POSTGRES_DB: auth
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - 5432:5432
+    networks:
+      - spring-network
+    restart: unless-stopped
+
+  mail-dev:
+    container_name: mail-dev-demo
+    image: maildev/maildev
+    ports:
+      - 1080:1080
+      - 1025:1025
+
+networks:
+  spring-network:
+    driver: bridge
+
+volumes:
+  postgres:
+    driver: local
