@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @EnableMethodSecurity(securedEnabled=true)
 public class SecurityConfiguration {
 
-    private JwtAuthFilter jwtAuthFilter;
+    private final JwtAuthFilter jwtAuthFilter;
     private final AuthenticationProvider authProvider;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

@@ -33,32 +33,32 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="tb_user")
+@Table(name = "tb_user")
 @EntityListeners(AuditingEntityListener.class)
-public class User implements UserDetails, Principal{
+public class User implements UserDetails, Principal {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;
 
-    @Column(unique=true)
+    @Column(unique = true)
     private String email;
     private String password;
     private boolean accountLocked;
     private boolean enabled;
 
     @CreatedDate
-    @Column(nullable=false, updatable=false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
 
     @LastModifiedDate
-    @Column(insertable=false)
+    @Column(insertable = false)
     private LocalDateTime lastModifiedDate;
 
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
 
     @Override
@@ -79,6 +79,26 @@ public class User implements UserDetails, Principal{
     @Override
     public String getName() {
         return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !accountLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 
     private String fullName() {
