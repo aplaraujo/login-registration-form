@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/auth
-    username: username
+    username: postgres
     password: 123456
     driver-class-name: org.postgresql.Driver
   jpa:
@@ -37,3 +37,6 @@ security:
 mailing:
   frontend:
     activation-url: http://localhost:4200/activate-account
+
+server:
+  port: 8088
