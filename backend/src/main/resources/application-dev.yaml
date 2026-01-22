@@ -33,3 +33,7 @@ security:
   jwt:
     secret-key: 2Op8YGcHWWlxONjwOS3XFWtFVchn8UuiGdW6quJIXh3
     duration: 8640000
+
+mailing:
+  frontend:
+    activation-url: http://localhost:4200/activate-account

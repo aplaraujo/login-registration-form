@@ -4,15 +4,18 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import io.github.aplaraujo.dto.RegistrationRequest;
 import io.github.aplaraujo.entities.Token;
 import io.github.aplaraujo.entities.User;
+import io.github.aplaraujo.enums.EmailTemplateName;
 import io.github.aplaraujo.repositories.RoleRepository;
 import io.github.aplaraujo.repositories.TokenRepository;
 import io.github.aplaraujo.repositories.UserRepository;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,8 +25,12 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
+    private final EmailService emailService;
+
+    @Value("${mailing.frontend.activation-url}")
+    private String activationUrl;
     
-    public void register(RegistrationRequest request) {
+    public void register(RegistrationRequest request) throws MessagingException {
         var userRole = roleRepository.findByName("USER").orElseThrow(() -> new IllegalStateException("ROLE_USER was not initialized!"));
         User user = new User();
         user.setFirstName(request.getFirstName());
@@ -37,8 +44,9 @@ public class AuthService {
         sendValidationEmail(user);
     }
 
-    private void sendValidationEmail(User user) {
+    private void sendValidationEmail(User user) throws MessagingException {
         var newToken = generateAndSaveActivationToken(user);
+        emailService.sendEmail(user.getEmail(), user.fullName(), EmailTemplateName.ACTIVATE_ACCOUNT, activationUrl, newToken, "Account Activation");
     }
 
     private String generateAndSaveActivationToken(User user) {
